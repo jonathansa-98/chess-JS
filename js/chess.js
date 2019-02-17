@@ -1,8 +1,5 @@
-const BOARD_CELL_NUM = 64;
-
-$(document).ready(function () {
-    start();
-});
+const CELL_NUM = 8;
+window.onload = start;
 
 function start() {
     console.log("start() called");
@@ -10,16 +7,21 @@ function start() {
 }
 
 function paintBoard() {
-    for (let i = 0; i < BOARD_CELL_NUM; i++) {
-        paintCell(i);
+    for (let i = 0; i < CELL_NUM; i++) {
+        for (let k = 0; k < CELL_NUM; k++) {
+            paintCell(i, k);
+        }
     }
 }
 
-function paintCell(index) {
+function paintCell(i,k) {
     var cell;
-    cell = $("<div/>", {
-        id: "" + index,
-        class: "cell"
-    });
-    $("#board").append(cell);
+    cell = document.createElement("div");
+    cell.id = i+" "+k;
+    if ((i + k) % 2 == 0) {
+        cell.className = "cell white";
+    } else {
+        cell.className = "cell black";
+    }
+    document.querySelector("#board").appendChild(cell);
 }

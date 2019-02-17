@@ -21,20 +21,19 @@ body {
     grid-template-columns: repeat(8, minmax(50px, 1fr));
 }
 
-#board .cell:nth-child(even) {
-    background: #D18B47;
-}
-
-#board .cell:nth-child(odd) {
-    background: #FFCE9E;
-}
-
 .cell {
-    background-color: #2E2E2E;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.cell.black{
+    background-color: #D18B47;
+}
+
+.cell.white{
+    background-color: #FFCE9E;
 }
 
 #chessboard {
