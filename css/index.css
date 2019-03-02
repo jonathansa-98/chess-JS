@@ -6,7 +6,7 @@ body {
     background: url(../img/wood.jpg);
 }
 
-#board {
+#tablero {
     background-color: rgb(122, 121, 121);
     margin: 0 auto;
     width: 100%;
@@ -16,18 +16,18 @@ body {
     grid-template-columns: repeat(8, minmax(50px, 1fr));
 }
 
-.cell {
+.celda {
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.cell.black{
+.celda.negra{
     background-color: #D18B47;
 }
 
-.cell.white{
+.celda.blanca{
     background-color: #FFCE9E;
 }
 
@@ -45,7 +45,7 @@ body {
                     ". rows" 1fr ;
 }
 
-#board {
+#tablero {
     grid-area: board;
 }
 
