@@ -94,7 +94,7 @@ function pintaPiezas() {
     pintaUI();
     // movimiento de prueba
     setTimeout(() => {
-        mueveCelda(random(8, 1), random(8, 1), random(8, 1), random(8, 1));
+        mueveCelda(random(7, 1), random(7, 1), random(7, 1), random(7, 1));
         pintaUI();
         console.log(TABLERO);
     }, 1000);
@@ -105,9 +105,7 @@ function random(casillas, start) {
 }
 
 function mueveCelda(x1, y1, x2, y2) {
-    var aux = TABLERO[x1][y1];
-    TABLERO[x1][y1] = TABLERO[x2][y2];
-    TABLERO[x2][y2] = aux;
+    [TABLERO[x1][y1], TABLERO[x2][y2]] = [TABLERO[x2][y2], TABLERO[x1][y1]];
 }
 
 function pintaUI() {
