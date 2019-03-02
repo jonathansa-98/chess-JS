@@ -17,10 +17,14 @@ body {
 }
 
 .celda {
-    cursor: pointer;
+    /* cursor: pointer; */
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.pieza{
+    cursor: pointer;
 }
 
 .celda.negra{

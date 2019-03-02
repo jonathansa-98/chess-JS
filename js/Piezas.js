@@ -17,6 +17,10 @@ function Peon(id, img, equipo) {
     this.base(id, img, equipo);
 }
 
+/*Peon.prototype.movimientosPosibles = function(x, y) {
+
+}*/
+
 Peon.prototype.mover = function(x, y) {
     if(x<8 && y<8){
         return "2 primer turno, luego 1 delante o ataca diagonal";
