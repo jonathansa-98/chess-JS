@@ -93,13 +93,6 @@ function pintaPiezas() {
     // pinta tablero entero
     console.log(TABLERO);
     pintaUI();
-    // movimiento de prueba
-    /*setTimeout(() => {
-        mueveCelda(random(8, 1), random(8, 1), random(8, 1), random(8, 1));
-        mueveCelda(2, 2, 5, 3);
-        pintaUI();
-        console.log(TABLERO);
-    }, 1000);*/
 }
 
 function random(casillas, start) {
@@ -108,8 +101,39 @@ function random(casillas, start) {
 
 function mueveCelda(x1, y1, x2, y2) {
     x1 -= 1; y1 -= 1; x2 -= 1; y2 -= 1;
-    [TABLERO[x1][y1].img, TABLERO[x2][y2].img] = [TABLERO[x2][y2].img, TABLERO[x1][y1].img];
-    [TABLERO[x1][y1].equipo, TABLERO[x2][y2].equipo] = [TABLERO[x2][y2].equipo, TABLERO[x1][y1].equipo];
+    //console.log(TABLERO[x1][y1].constructor.name);
+    //console.log(TABLERO[x2][y2].constructor.name);
+    var aux1 = copia(TABLERO[x1][y1]);
+    var aux2 = copia(TABLERO[x2][y2]);
+    TABLERO[x1][y1] = aux2;
+    TABLERO[x2][y2] = aux1;
+    TABLERO[x2][y2].id = aux2.id;
+    TABLERO[x1][y1].id = aux1.id;
+    //console.log(TABLERO[x1][y1].constructor.name);
+    //console.log(TABLERO[x2][y2].constructor.name);
+    //[TABLERO[x1][y1], TABLERO[x2][y2]] = [TABLERO[x2][y2], TABLERO[x1][y1]];
+
+    //[TABLERO[x1][y1].img, TABLERO[x2][y2].img] = [TABLERO[x2][y2].img, TABLERO[x1][y1].img];
+    //[TABLERO[x1][y1].equipo, TABLERO[x2][y2].equipo] = [TABLERO[x2][y2].equipo, TABLERO[x1][y1].equipo];
+}
+
+function copia(src) {
+    switch(src.constructor.name) {
+        case "Pieza":
+            return new Pieza(src.id, src.img, src.equipo);
+        case "Peon":
+            return new Peon(src.id, src.img, src.equipo);
+        case "Torre":
+            return new Torre(src.id, src.img, src.equipo);
+        case "Caballo":
+            return new Caballo(src.id, src.img, src.equipo);
+        case "Alfil":
+            return new Alfil(src.id, src.img, src.equipo);
+        case "Dama":
+            return new Dama(src.id, src.img, src.equipo);
+        case "Rey":
+            return new Rey(src.id, src.img, src.equipo);
+    }
 }
 
 function pintaUI() {
@@ -134,9 +158,10 @@ TABLERO_DOM.addEventListener('click', e => {
             ele.classList.remove("marcador");
         });
         pieza = getPiezaEnTABLERO(celda);
+        console.log(pieza.constructor.name);
+        console.log(pieza);
         var mov = pieza.getMovPosibles();
         for (let i = 0; i < mov.length; i++) {
-            //console.log(celdas[8 * mov[i][0] + mov[i][1] - 9]);
             celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
         }
     } else if (celda.classList.contains('marcador')) {
@@ -145,13 +170,11 @@ TABLERO_DOM.addEventListener('click', e => {
         coord_m = coord_m.map(Number);
         coord_p = coord_p.map(Number);
         mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
-        //console.log(pieza.mover(coord_m[0], coord_m[1]));
         pintaUI();
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
         console.log(TABLERO);
-
     } else {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
@@ -160,11 +183,20 @@ TABLERO_DOM.addEventListener('click', e => {
 });
 
 function getPiezaEnTABLERO(celda) {
+    for (let x = 0; x < TABLERO.length; x++) {
+        for (let y = 0; y < TABLERO[x].length; y++) {
+            if (celda.id === (x+1)+"-"+(y+1)) {
+                return TABLERO[x][y];
+            }
+        }
+    }
+
+/*
     for (const fila of TABLERO) {
         for (const elemento of fila) {
             if (celda.id === elemento.id) {
                 return elemento;
             }
         }
-    }
+    }*/
 }
