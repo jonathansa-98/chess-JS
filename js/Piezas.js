@@ -4,7 +4,7 @@ function Pieza(id, img, equipo) {
     this.equipo = equipo || 0; // -1 == blancas && 1 == negras && 0 vacio.
 }
 
-Pieza.prototype.print = function () {
+Pieza.prototype.toString = function () {
     return `ID: ${this.id} Img: ${this.img} Equipo: ${this.equipo}`;
 }
 
@@ -39,13 +39,8 @@ Peon.prototype.getMovPosibles = function() {
             posibles.push(pos.slice(0));
         }
     }
+    console.log(posibles);
     return posibles;
-};
-
-Peon.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return `2 primer turno, luego 1 delante o ataca diagonal ${x}-${y}`;
-    }
 };
 /******************* */
 /** Torre */
@@ -56,11 +51,49 @@ function Torre(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
 
-Torre.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "infinito recto";
-    }
-};
+// devuelve un array con las coordenadas de cada posicion posible
+Torre.prototype.getMovPosibles = function () {
+    var pos = [];
+    var posibles = [];
+    // arriba
+    try{
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while(pos[0] > 1) {
+            pos[0] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch(e){}
+    // abajo
+    try{
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while(pos[0] < 8) {
+            pos[0] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch(e){}
+    // izquierda
+    try{
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while(pos[1] > 1) {
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch(e){}
+    // abajo
+    try{
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while(pos[1] < 8) {
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch(e){}
+    console.log(posibles);
+    return posibles;
+}
 /******************* */
 /** Caballo */
 Caballo.prototype = new Pieza();
@@ -70,11 +103,26 @@ function Caballo(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
 
-Caballo.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "en L";
+Caballo.prototype.getMovPosibles = function () {
+    var pos = [];
+    var posibles = [];
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 7 && pos[1] < 8) { // abajo derecha
+        pos[0] += 2;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
     }
-};
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 7 && pos[1] > 1) { // abajo izquierda
+        pos[0] += 2;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
+    console.log(posibles);
+    return posibles;
+}
 /******************* */
 /** Alfil */
 Alfil.prototype = new Pieza();
@@ -84,11 +132,52 @@ function Alfil(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
 
-Alfil.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "en diagonal";
-    }
-};
+Alfil.prototype.getMovPosibles = function () {
+    var pos = [];
+    var posibles = [];
+    // arriba izquierda
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] > 1 && pos[1] > 1) {
+            pos[0] -= 1;
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // arriba derecha
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] > 1 && pos[1] < 8) {
+            pos[0] -= 1;
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo izquierda
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] < 8 && pos[1] > 1) {
+            pos[0] += 1;
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo derecha
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] < 8 && pos[1] < 8) {
+            pos[0] += 1;
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    console.log(posibles);
+    return posibles;
+}
 /******************* */
 /** Dama */
 Dama.prototype = new Pieza();
@@ -97,12 +186,88 @@ Dama.prototype.constructor = Dama;
 function Dama(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
-
-Dama.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "infinito en diagonal, vertical y horizontal";
-    }
-};
+Dama.prototype.getMovPosibles = function () {
+    var pos = [];
+    var posibles = [];
+    // arriba
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] > 1) {
+            pos[0] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] < 8) {
+            pos[0] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // izquierda
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[1] > 1) {
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[1] < 8) {
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // arriba izquierda
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] > 1 && pos[1] > 1) {
+            pos[0] -= 1;
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // arriba derecha
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] > 1 && pos[1] < 8) {
+            pos[0] -= 1;
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo izquierda
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] < 8 && pos[1] > 1) {
+            pos[0] += 1;
+            pos[1] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    // abajo derecha
+    try {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        while (pos[0] < 8 && pos[1] < 8) {
+            pos[0] += 1;
+            pos[1] += 1;
+            posibles.push(pos.slice(0));
+        }
+    } catch (e) {}
+    console.log(posibles);
+    return posibles;
+}
 /******************* */
 /** Rey */
 Rey.prototype = new Pieza();
@@ -112,9 +277,62 @@ function Rey(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
 
-Rey.prototype.mover = function(x, y) {
-    if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "cualquier alrededor suyo 1 celda";
+Rey.prototype.getMovPosibles = function () {
+    var pos = [];
+    var posibles = [];
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 1) { // arriba
+        pos[0] -= 1;
+        posibles.push(pos.slice(0));
     }
-};
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 8) { // abajo
+        pos[0] += 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[1] > 1) { // izquierda
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[1] < 8) { // derecha
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 1 && pos[1] < 8) { // arriba derecha
+        pos[0] -= 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 8 && pos[1] < 8) { // abajo derecha
+        pos[0] += 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 8 && pos[1] > 1) { // abajo izquierda
+        pos[0] += 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 1 && pos[1] > 1) { // arriba izquierda
+        pos[0] -= 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
+    console.log(posibles);
+    return posibles;
+}
 /******************* */

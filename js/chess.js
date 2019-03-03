@@ -101,20 +101,14 @@ function random(casillas, start) {
 
 function mueveCelda(x1, y1, x2, y2) {
     x1 -= 1; y1 -= 1; x2 -= 1; y2 -= 1;
-    //console.log(TABLERO[x1][y1].constructor.name);
-    //console.log(TABLERO[x2][y2].constructor.name);
     var aux1 = copia(TABLERO[x1][y1]);
     var aux2 = copia(TABLERO[x2][y2]);
+    var id1 = aux1.id;
+    var id2 = aux2.id;
     TABLERO[x1][y1] = aux2;
     TABLERO[x2][y2] = aux1;
-    TABLERO[x2][y2].id = aux2.id;
-    TABLERO[x1][y1].id = aux1.id;
-    //console.log(TABLERO[x1][y1].constructor.name);
-    //console.log(TABLERO[x2][y2].constructor.name);
-    //[TABLERO[x1][y1], TABLERO[x2][y2]] = [TABLERO[x2][y2], TABLERO[x1][y1]];
-
-    //[TABLERO[x1][y1].img, TABLERO[x2][y2].img] = [TABLERO[x2][y2].img, TABLERO[x1][y1].img];
-    //[TABLERO[x1][y1].equipo, TABLERO[x2][y2].equipo] = [TABLERO[x2][y2].equipo, TABLERO[x1][y1].equipo];
+    TABLERO[x2][y2].id = id2;
+    TABLERO[x1][y1].id = id1;
 }
 
 function copia(src) {
