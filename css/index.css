@@ -4,6 +4,7 @@ body {
     font-size: 30px;
     color: white;
     background: url(../img/wood.jpg);
+    background-size: cover;
 }
 
 #tablero {
@@ -66,4 +67,8 @@ body {
     grid-area: rows;
     display: grid;
     grid-template-columns: repeat(8, minmax(50px, 1fr));
+}
+
+.celda.marcador{
+    background-color: blue;
 }

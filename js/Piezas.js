@@ -16,13 +16,35 @@ function Peon(id, img, equipo) {
     Pieza.call(this, id, img, equipo);
 }
 
-/*Peon.prototype.movimientosPosibles = function(x, y) {
-
-}*/
+// devuelve un array con las coordenadas de cada posicion posible
+Peon.prototype.getMovPosibles = function() {
+    var pos = [];
+    var posibles = [];
+    if (this.equipo == TEAM_NEGRAS) {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        pos[0] += 1;
+        posibles.push(pos.slice(0));
+        if(true) {
+            pos[0] +=1;
+            posibles.push(pos.slice(0));
+        }
+    } else if (this.equipo == TEAM_BLANCAS) {
+        pos = this.id.split("-");
+        pos = pos.map(Number);
+        pos[0] -= 1;
+        posibles.push(pos.slice(0));
+        if (true) {
+            pos[0] -= 1;
+            posibles.push(pos.slice(0));
+        }
+    }
+    return posibles;
+};
 
 Peon.prototype.mover = function(x, y) {
     if(x >= 1 && x <= 8 && y >= 1 && y <= 8){
-        return "2 primer turno, luego 1 delante o ataca diagonal";
+        return `2 primer turno, luego 1 delante o ataca diagonal ${x}-${y}`;
     }
 };
 /******************* */

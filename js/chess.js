@@ -6,7 +6,7 @@ const PIEZAS_NEGRAS = [];
 const TEAM_BLANCAS = -1;
 const TEAM_NEGRAS = 1;
 const TABLERO_DOM = document.querySelector("#tablero");
-
+var pieza;
 let celdas;
 
 /****************** */
@@ -94,12 +94,12 @@ function pintaPiezas() {
     console.log(TABLERO);
     pintaUI();
     // movimiento de prueba
-    setTimeout(() => {
+    /*setTimeout(() => {
         mueveCelda(random(8, 1), random(8, 1), random(8, 1), random(8, 1));
         mueveCelda(2, 2, 5, 3);
         pintaUI();
         console.log(TABLERO);
-    }, 1000);
+    }, 1000);*/
 }
 
 function random(casillas, start) {
@@ -127,11 +127,35 @@ function pintaUI() {
 /**************************************************** */
 // addEventListener a piezas en tablero
 TABLERO_DOM.addEventListener('click', e => {
+    celdas = document.querySelectorAll("#tablero > div");
     var celda = e.target;
     if (celda.classList.contains('pieza')) {
-        const pieza = getPiezaEnTABLERO(celda);
-        console.log(pieza);
-        //compruevaMovimientos(celda);
+        celdas.forEach(ele => {
+            ele.classList.remove("marcador");
+        });
+        pieza = getPiezaEnTABLERO(celda);
+        var mov = pieza.getMovPosibles();
+        for (let i = 0; i < mov.length; i++) {
+            //console.log(celdas[8 * mov[i][0] + mov[i][1] - 9]);
+            celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
+        }
+    } else if (celda.classList.contains('marcador')) {
+        var coord_m = celda.id.split("-");
+        var coord_p = pieza.id.split("-");
+        coord_m = coord_m.map(Number);
+        coord_p = coord_p.map(Number);
+        mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
+        //console.log(pieza.mover(coord_m[0], coord_m[1]));
+        pintaUI();
+        celdas.forEach(ele => {
+            ele.classList.remove("marcador");
+        });
+        console.log(TABLERO);
+
+    } else {
+        celdas.forEach(ele => {
+            ele.classList.remove("marcador");
+        });
     }
 });
 
