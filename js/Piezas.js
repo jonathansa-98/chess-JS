@@ -12,8 +12,9 @@ Pieza.prototype.toString = function () {
 Peon.prototype = new Pieza();
 Peon.prototype.constructor = Peon;
 
-function Peon(id, img, equipo) {
+function Peon(id, img, equipo, move) {
     Pieza.call(this, id, img, equipo);
+    this.move = move || 0;
 }
 
 // devuelve un array con las coordenadas de cada posicion posible
@@ -25,7 +26,7 @@ Peon.prototype.getMovPosibles = function() {
         pos = pos.map(Number);
         pos[0] += 1;
         posibles.push(pos.slice(0));
-        if(true) {
+        if(this.move < 1) {
             pos[0] +=1;
             posibles.push(pos.slice(0));
         }
@@ -34,12 +35,12 @@ Peon.prototype.getMovPosibles = function() {
         pos = pos.map(Number);
         pos[0] -= 1;
         posibles.push(pos.slice(0));
-        if (true) {
+        if (this.move < 1) {
             pos[0] -= 1;
             posibles.push(pos.slice(0));
         }
     }
-    console.log(posibles);
+    //console.log(posibles);
     return posibles;
 };
 /******************* */
@@ -91,7 +92,7 @@ Torre.prototype.getMovPosibles = function () {
             posibles.push(pos.slice(0));
         }
     } catch(e){}
-    console.log(posibles);
+    //console.log(posibles);
     return posibles;
 }
 /******************* */
@@ -120,7 +121,49 @@ Caballo.prototype.getMovPosibles = function () {
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    console.log(posibles);
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 8 && pos[1] > 2) { // izquierda abajo
+        pos[0] += 1;
+        pos[1] -= 2;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 1 && pos[1] > 2) { // izquierda arriba
+        pos[0] -= 1;
+        pos[1] -= 2;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 2 && pos[1] > 1) { // arriba izquierda
+        pos[0] -= 2;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 2 && pos[1] < 8) { // arriba izquierda
+        pos[0] -= 2;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] > 1 && pos[1] < 7) { // derecha arriba
+        pos[0] -= 1;
+        pos[1] += 2;
+        posibles.push(pos.slice(0));
+    }
+    pos = this.id.split("-");
+    pos = pos.map(Number);
+    if (pos[0] < 8 && pos[1] < 7) { // derecha abajo
+        pos[0] += 1;
+        pos[1] += 2;
+        posibles.push(pos.slice(0));
+    }
+    //console.log(posibles);
     return posibles;
 }
 /******************* */
@@ -175,7 +218,7 @@ Alfil.prototype.getMovPosibles = function () {
             posibles.push(pos.slice(0));
         }
     } catch (e) {}
-    console.log(posibles);
+    //console.log(posibles);
     return posibles;
 }
 /******************* */
@@ -265,7 +308,7 @@ Dama.prototype.getMovPosibles = function () {
             posibles.push(pos.slice(0));
         }
     } catch (e) {}
-    console.log(posibles);
+    //console.log(posibles);
     return posibles;
 }
 /******************* */
@@ -332,7 +375,7 @@ Rey.prototype.getMovPosibles = function () {
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    console.log(posibles);
+    //console.log(posibles);
     return posibles;
 }
 /******************* */

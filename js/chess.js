@@ -116,7 +116,7 @@ function copia(src) {
         case "Pieza":
             return new Pieza(src.id, src.img, src.equipo);
         case "Peon":
-            return new Peon(src.id, src.img, src.equipo);
+            return new Peon(src.id, src.img, src.equipo, ++src.move);
         case "Torre":
             return new Torre(src.id, src.img, src.equipo);
         case "Caballo":
@@ -152,8 +152,8 @@ TABLERO_DOM.addEventListener('click', e => {
             ele.classList.remove("marcador");
         });
         pieza = getPiezaEnTABLERO(celda);
-        console.log(pieza.constructor.name);
-        console.log(pieza);
+        //console.log(pieza.constructor.name);
+        //console.log(pieza);
         var mov = pieza.getMovPosibles();
         for (let i = 0; i < mov.length; i++) {
             celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
@@ -168,7 +168,7 @@ TABLERO_DOM.addEventListener('click', e => {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
-        console.log(TABLERO);
+        //console.log(TABLERO);
     } else {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
@@ -184,13 +184,4 @@ function getPiezaEnTABLERO(celda) {
             }
         }
     }
-
-/*
-    for (const fila of TABLERO) {
-        for (const elemento of fila) {
-            if (celda.id === elemento.id) {
-                return elemento;
-            }
-        }
-    }*/
 }

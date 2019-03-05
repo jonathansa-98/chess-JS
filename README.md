@@ -37,8 +37,7 @@ Otro posible resultado es el empate o "tablas", que se produce en cualquiera de 
 
 ● El Caballo se mueve avanzando 2 casillas en vertical y una en horizontal, o al contrario, se conoce como un movimiento en "L". Es la única pieza que puede saltar por encima de las demás.
 
-● El peón puede avanzar una o dos casillas en dirección vertical en su primer movimiento, después de adelantado por primera vez sólo puede avanzar una casilla. No puede ir hacia atrás y no puede capturar las piezas contrarias que estén en su misma dirección. El peón podrá capturar las piezas que se encuentran a una casilla en diagonal respecto a él, no a las que estén delante de ellos. Un peón puede cambiarse por la pieza que su jugador desee si
-es capaz de alcanzar la última fila del tablero a la de su lado.
+● El peón puede avanzar una o dos casillas en dirección vertical en su primer movimiento, después de adelantado por primera vez sólo puede avanzar una casilla. No puede ir hacia atrás y no puede capturar las piezas contrarias que estén en su misma dirección. El peón podrá capturar las piezas que se encuentran a una casilla en diagonal respecto a él, no a las que estén delante de ellos. Un peón puede cambiarse por la pieza que su jugador desee si es capaz de alcanzar la última fila del tablero a la de su lado.
 
 Los jugadores mueven por turnos. En cada turno, un jugador sólo puede mover una pieza. El jugador que juega con las piezas blancas es siempre el que mueve primero.
 
