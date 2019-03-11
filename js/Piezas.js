@@ -57,43 +57,35 @@ Torre.prototype.getMovPosibles = function () {
     var pos = [];
     var posibles = [];
     // arriba
-    try{
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while(pos[0] > 1) {
-            pos[0] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch(e){}
+    pos = this.id.split("-").map(Number);
+    while(pos[0] > 1) {
+        pos[0] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo
-    try{
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while(pos[0] < 8) {
-            pos[0] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch(e){}
+    pos = this.id.split("-").map(Number);
+    while(pos[0] < 8) {
+        pos[0] += 1;
+        posibles.push(pos.slice(0));
+    }
     // izquierda
-    try{
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while(pos[1] > 1) {
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch(e){}
+    pos = this.id.split("-").map(Number);
+    while(pos[1] > 1) {
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo
-    try{
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while(pos[1] < 8) {
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch(e){}
+    pos = this.id.split("-").map(Number);
+    while(pos[1] < 8) {
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     //console.log(posibles);
     return posibles;
+}
+
+Torre.prototype.calcCollision = function () {
+
 }
 /******************* */
 /** Caballo */
@@ -107,57 +99,49 @@ function Caballo(id, img, equipo) {
 Caballo.prototype.getMovPosibles = function () {
     var pos = [];
     var posibles = [];
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 7 && pos[1] < 8) { // abajo derecha
         pos[0] += 2;
         pos[1] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 7 && pos[1] > 1) { // abajo izquierda
         pos[0] += 2;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] > 2) { // izquierda abajo
         pos[0] += 1;
         pos[1] -= 2;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] > 2) { // izquierda arriba
         pos[0] -= 1;
         pos[1] -= 2;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 2 && pos[1] > 1) { // arriba izquierda
         pos[0] -= 2;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 2 && pos[1] < 8) { // arriba izquierda
         pos[0] -= 2;
         pos[1] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] < 7) { // derecha arriba
         pos[0] -= 1;
         pos[1] += 2;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] < 7) { // derecha abajo
         pos[0] += 1;
         pos[1] += 2;
@@ -179,45 +163,33 @@ Alfil.prototype.getMovPosibles = function () {
     var pos = [];
     var posibles = [];
     // arriba izquierda
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] > 1 && pos[1] > 1) {
-            pos[0] -= 1;
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] > 1 && pos[1] > 1) {
+        pos[0] -= 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // arriba derecha
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] > 1 && pos[1] < 8) {
-            pos[0] -= 1;
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] > 1 && pos[1] < 8) {
+        pos[0] -= 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo izquierda
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] < 8 && pos[1] > 1) {
-            pos[0] += 1;
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] < 8 && pos[1] > 1) {
+        pos[0] += 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo derecha
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] < 8 && pos[1] < 8) {
-            pos[0] += 1;
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] < 8 && pos[1] < 8) {
+        pos[0] += 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     //console.log(posibles);
     return posibles;
 }
@@ -233,81 +205,57 @@ Dama.prototype.getMovPosibles = function () {
     var pos = [];
     var posibles = [];
     // arriba
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] > 1) {
-            pos[0] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] > 1) {
+        pos[0] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] < 8) {
-            pos[0] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] < 8) {
+        pos[0] += 1;
+        posibles.push(pos.slice(0));
+    }
     // izquierda
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[1] > 1) {
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[1] > 1) {
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[1] < 8) {
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[1] < 8) {
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     // arriba izquierda
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] > 1 && pos[1] > 1) {
-            pos[0] -= 1;
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] > 1 && pos[1] > 1) {
+        pos[0] -= 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // arriba derecha
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] > 1 && pos[1] < 8) {
-            pos[0] -= 1;
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] > 1 && pos[1] < 8) {
+        pos[0] -= 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo izquierda
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] < 8 && pos[1] > 1) {
-            pos[0] += 1;
-            pos[1] -= 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] < 8 && pos[1] > 1) {
+        pos[0] += 1;
+        pos[1] -= 1;
+        posibles.push(pos.slice(0));
+    }
     // abajo derecha
-    try {
-        pos = this.id.split("-");
-        pos = pos.map(Number);
-        while (pos[0] < 8 && pos[1] < 8) {
-            pos[0] += 1;
-            pos[1] += 1;
-            posibles.push(pos.slice(0));
-        }
-    } catch (e) {}
+    pos = this.id.split("-").map(Number);
+    while (pos[0] < 8 && pos[1] < 8) {
+        pos[0] += 1;
+        pos[1] += 1;
+        posibles.push(pos.slice(0));
+    }
     //console.log(posibles);
     return posibles;
 }
@@ -323,53 +271,45 @@ function Rey(id, img, equipo) {
 Rey.prototype.getMovPosibles = function () {
     var pos = [];
     var posibles = [];
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 1) { // arriba
         pos[0] -= 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 8) { // abajo
         pos[0] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[1] > 1) { // izquierda
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[1] < 8) { // derecha
         pos[1] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] < 8) { // arriba derecha
         pos[0] -= 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] < 8) { // abajo derecha
         pos[0] += 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] > 1) { // abajo izquierda
         pos[0] += 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
     }
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] > 1) { // arriba izquierda
         pos[0] -= 1;
         pos[1] -= 1;
