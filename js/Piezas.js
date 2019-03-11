@@ -4,6 +4,25 @@ function Pieza(id, img, equipo) {
     this.equipo = equipo || 0; // -1 == blancas && 1 == negras && 0 vacio.
 }
 
+/* devuelve: 1 = colisiona con pieza del mismo equipo
+            -1 = colisiona con pieza del otro equipo
+            0 = no colisiona*/
+Pieza.prototype.calcCollision = function (pos) {
+    var pieza = this;
+    var x = pos[0] - 1;
+    var y = pos[1] - 1;
+    //console.log(`x: ${x}, y: ${y}`);
+    //console.log(TABLERO[x][y]);
+    if (TABLERO[x][y].equipo == pieza.equipo) {
+        return 1;
+    } else if (TABLERO[x][y].equipo != 0 &&
+        TABLERO[x][y].equipo != pieza.equipo) {
+        return -1;
+    } else {
+        return 0;
+    }
+};
+
 Pieza.prototype.toString = function () {
     return `ID: ${this.id} Img: ${this.img} Equipo: ${this.equipo}`;
 }
@@ -60,33 +79,43 @@ Torre.prototype.getMovPosibles = function () {
     pos = this.id.split("-").map(Number);
     while(pos[0] > 1) {
         pos[0] -= 1;
+        // calcular colision con fichas
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1){
+            posibles.splice(-1, 1);break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo
     pos = this.id.split("-").map(Number);
     while(pos[0] < 8) {
         pos[0] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // izquierda
     pos = this.id.split("-").map(Number);
     while(pos[1] > 1) {
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo
     pos = this.id.split("-").map(Number);
     while(pos[1] < 8) {
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     //console.log(posibles);
     return posibles;
 }
 
-Torre.prototype.calcCollision = function () {
-
-}
 /******************* */
 /** Caballo */
 Caballo.prototype = new Pieza();
@@ -104,48 +133,56 @@ Caballo.prototype.getMovPosibles = function () {
         pos[0] += 2;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 7 && pos[1] > 1) { // abajo izquierda
         pos[0] += 2;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] > 2) { // izquierda abajo
         pos[0] += 1;
         pos[1] -= 2;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] > 2) { // izquierda arriba
         pos[0] -= 1;
         pos[1] -= 2;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 2 && pos[1] > 1) { // arriba izquierda
         pos[0] -= 2;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 2 && pos[1] < 8) { // arriba izquierda
         pos[0] -= 2;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] < 7) { // derecha arriba
         pos[0] -= 1;
         pos[1] += 2;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] < 7) { // derecha abajo
         pos[0] += 1;
         pos[1] += 2;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     //console.log(posibles);
     return posibles;
@@ -168,6 +205,10 @@ Alfil.prototype.getMovPosibles = function () {
         pos[0] -= 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
+
     }
     // arriba derecha
     pos = this.id.split("-").map(Number);
@@ -175,6 +216,9 @@ Alfil.prototype.getMovPosibles = function () {
         pos[0] -= 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo izquierda
     pos = this.id.split("-").map(Number);
@@ -182,6 +226,9 @@ Alfil.prototype.getMovPosibles = function () {
         pos[0] += 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo derecha
     pos = this.id.split("-").map(Number);
@@ -189,6 +236,9 @@ Alfil.prototype.getMovPosibles = function () {
         pos[0] += 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     //console.log(posibles);
     return posibles;
@@ -209,24 +259,36 @@ Dama.prototype.getMovPosibles = function () {
     while (pos[0] > 1) {
         pos[0] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo
     pos = this.id.split("-").map(Number);
     while (pos[0] < 8) {
         pos[0] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // izquierda
     pos = this.id.split("-").map(Number);
     while (pos[1] > 1) {
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo
     pos = this.id.split("-").map(Number);
     while (pos[1] < 8) {
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // arriba izquierda
     pos = this.id.split("-").map(Number);
@@ -234,6 +296,9 @@ Dama.prototype.getMovPosibles = function () {
         pos[0] -= 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // arriba derecha
     pos = this.id.split("-").map(Number);
@@ -241,6 +306,9 @@ Dama.prototype.getMovPosibles = function () {
         pos[0] -= 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo izquierda
     pos = this.id.split("-").map(Number);
@@ -248,6 +316,9 @@ Dama.prototype.getMovPosibles = function () {
         pos[0] += 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     // abajo derecha
     pos = this.id.split("-").map(Number);
@@ -255,6 +326,9 @@ Dama.prototype.getMovPosibles = function () {
         pos[0] += 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) {
+            posibles.splice(-1, 1); break;
+        } else if (this.calcCollision(pos) == -1) break;
     }
     //console.log(posibles);
     return posibles;
@@ -275,45 +349,53 @@ Rey.prototype.getMovPosibles = function () {
     if (pos[0] > 1) { // arriba
         pos[0] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 8) { // abajo
         pos[0] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[1] > 1) { // izquierda
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[1] < 8) { // derecha
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] < 8) { // arriba derecha
         pos[0] -= 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] < 8) { // abajo derecha
         pos[0] += 1;
         pos[1] += 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] < 8 && pos[1] > 1) { // abajo izquierda
         pos[0] += 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     pos = this.id.split("-").map(Number);
     if (pos[0] > 1 && pos[1] > 1) { // arriba izquierda
         pos[0] -= 1;
         pos[1] -= 1;
         posibles.push(pos.slice(0));
+        if (this.calcCollision(pos) == 1) posibles.splice(-1, 1);
     }
     //console.log(posibles);
     return posibles;
