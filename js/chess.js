@@ -143,16 +143,19 @@ function pintaUI() {
 TABLERO_DOM.addEventListener('click', e => {
     celdas = document.querySelectorAll("#tablero > div");
     var celda = e.target;
+    var coord_m;
+    var coord_p;
     // ataque a pieza
     if (celda.classList.contains('pieza') && celda.classList.contains('marcador')) {
-        var coord_m = celda.id.split("-").map(Number);
-        var coord_p = pieza.id.split("-").map(Number);
+        coord_m = celda.id.split("-").map(Number);
+        coord_p = pieza.id.split("-").map(Number);
         matar(coord_m);
         mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
         pintaUI();
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
+        comprovarCoronacionPeon(coord_m);
     // selecciona pieza
     } else if (celda.classList.contains('pieza')) {
         celdas.forEach(ele => {
@@ -165,8 +168,8 @@ TABLERO_DOM.addEventListener('click', e => {
         }
     // gestiona movimiento de la pieza seleccionada
     } else if (celda.classList.contains('marcador')) {
-        var coord_m = celda.id.split("-").map(Number);
-        var coord_p = pieza.id.split("-").map(Number);
+        coord_m = celda.id.split("-").map(Number);
+        coord_p = pieza.id.split("-").map(Number);
         mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
         pintaUI();
         celdas.forEach(ele => {
@@ -200,17 +203,16 @@ function matar(coord_destino) {
 
 function comprovarCoronacionPeon(coord_m) {
     if(pieza.constructor.name == "Peon"){
-
-        /** ALERTA POR SUBNORMAL HAY QUE HACER NEW */
-        pieza = TABLERO[coord_m[0] - 1][coord_m[1] - 1];
+        var aux = TABLERO[coord_m[0] - 1][coord_m[1] - 1];
+        pieza = new Peon(aux.id, aux.img, aux.equipo);
         // coronar peon blanco
-        if(coord_m[0] == 1) verDialogCanviarPieza(pieza);
+        if(coord_m[0] == 1) verDialogCanviarPieza();
         // coronar peon negro
-        else if(coord_m[0] == 8) verDialogCanviarPieza(pieza);
+        else if(coord_m[0] == 8) verDialogCanviarPieza();
     }
 }
 
-function verDialogCanviarPieza(pieza) {
+function verDialogCanviarPieza() {
     var modal = document.getElementById('change-piece');
     var modal_body = document.querySelector('#change-piece .modal-body');
     var div;
@@ -235,33 +237,28 @@ function verDialogCanviarPieza(pieza) {
     modal_body.addEventListener('click', e => {
         var elegida = e.target;
         if (elegida.className == "eleccion") {
-            var img = elegida.style.backgroundImage;
-            img = img.substring(5, 15);
+            var img = elegida.style.backgroundImage.substring(5, 15);
             var team;
             var coord = pieza.id.split("-").map(Number);
-            var res;
             // cojer equipo
             if(img.charAt(4) == 'N') {team = TEAM_NEGRAS;}
             else if(img.charAt(4) == 'B') {team = TEAM_BLANCAS;}
             // cojer pieza elegida
             switch (img.charAt(5)) {
                 case "T":
-                    res = new Torre(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0]-1][coord[1]-1] = new Torre(coord[0]+"-"+coord[1], img, team);
                     break;
                 case "C":
-                    res = new Caballo(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0]-1][coord[1]-1] = new Caballo(coord[0]+"-"+coord[1], img, team);
                     break;
                 case "A":
-                    res = new Alfil(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0]-1][coord[1]-1] = new Alfil(coord[0]+"-"+coord[1], img, team);
                     break;
                 case "D":
-                    res = new Dama(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0]-1][coord[1]-1] = new Dama(coord[0]+"-"+coord[1], img, team);
                     break;
             }
-            TABLERO[coord[0]-1][coord[1]-1] = res;
             pintaUI();
-            console.log(TABLERO);
-
             // cerrar modal
             while (modal_body.hasChildNodes()) {
                 modal_body.removeChild(modal_body.firstChild);
