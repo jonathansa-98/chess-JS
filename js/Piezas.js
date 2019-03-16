@@ -80,29 +80,31 @@ Peon.prototype.getMovPosibles = function() {
     pos = this.id.split("-");
     pos = pos.map(Number);
     this.calcAtaquesPosibles(pos, posibles);
-    if (this.equipo == TEAM_NEGRAS) {
-        pos[0] += 1;
-        if (this.calcCollision(pos) == 0){
-            posibles.push(pos.slice(0));
-            if(this.move < 1) {
-                pos[0] +=1;
-                if (this.calcCollision(pos) == 0) {
-                    posibles.push(pos.slice(0));
+    try{
+        if (this.equipo == TEAM_NEGRAS) {
+            pos[0] += 1;
+            if (this.calcCollision(pos) == 0){
+                posibles.push(pos.slice(0));
+                if(this.move < 1) {
+                    pos[0] +=1;
+                    if (this.calcCollision(pos) == 0) {
+                        posibles.push(pos.slice(0));
+                    }
+                }
+            }
+        } else if (this.equipo == TEAM_BLANCAS) {
+            pos[0] -= 1;
+            if (this.calcCollision(pos) == 0) {
+                posibles.push(pos.slice(0));
+                if (this.move < 1) {
+                    pos[0] -= 1;
+                    if (this.calcCollision(pos) == 0) {
+                        posibles.push(pos.slice(0));
+                    }
                 }
             }
         }
-    } else if (this.equipo == TEAM_BLANCAS) {
-        pos[0] -= 1;
-        if (this.calcCollision(pos) == 0) {
-            posibles.push(pos.slice(0));
-            if (this.move < 1) {
-                pos[0] -= 1;
-                if (this.calcCollision(pos) == 0) {
-                    posibles.push(pos.slice(0));
-                }
-            }
-        }
-    }
+    } catch(e){}
     //console.log(posibles);
     return posibles;
 };

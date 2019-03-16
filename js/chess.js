@@ -15,7 +15,6 @@ window.onload = start;
 
 function start() {
     pintaTablero();
-    verDialogCanviarPieza()
 }
 
 function creaNegras() {
@@ -146,31 +145,34 @@ TABLERO_DOM.addEventListener('click', e => {
     var celda = e.target;
     // ataque a pieza
     if (celda.classList.contains('pieza') && celda.classList.contains('marcador')) {
-
+        var coord_m = celda.id.split("-").map(Number);
+        var coord_p = pieza.id.split("-").map(Number);
+        matar(coord_m);
+        mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
+        pintaUI();
+        celdas.forEach(ele => {
+            ele.classList.remove("marcador");
+        });
     // selecciona pieza
     } else if (celda.classList.contains('pieza')) {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
         pieza = getPiezaEnTABLERO(celda);
-        //console.log(pieza.constructor.name);
-        //console.log(pieza);
         var mov = pieza.getMovPosibles();
         for (let i = 0; i < mov.length; i++) {
             celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
         }
     // gestiona movimiento de la pieza seleccionada
     } else if (celda.classList.contains('marcador')) {
-        var coord_m = celda.id.split("-");
-        var coord_p = pieza.id.split("-");
-        coord_m = coord_m.map(Number);
-        coord_p = coord_p.map(Number);
+        var coord_m = celda.id.split("-").map(Number);
+        var coord_p = pieza.id.split("-").map(Number);
         mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
         pintaUI();
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
-        //console.log(TABLERO);
+        comprovarCoronacionPeon(coord_m);
     } else {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
@@ -188,27 +190,83 @@ function getPiezaEnTABLERO(celda) {
     }
 }
 
-function verDialogCanviarPieza() {
-    // Get the modal
+function matar(coord_destino) {
+    x = coord_destino[0];
+    y = coord_destino[1];
+    var vacia = new Pieza(`${x}-${y}`);
+    x--; y--;
+    TABLERO[x][y] = vacia;
+}
+
+function comprovarCoronacionPeon(coord_m) {
+    if(pieza.constructor.name == "Peon"){
+
+        /** ALERTA POR SUBNORMAL HAY QUE HACER NEW */
+        pieza = TABLERO[coord_m[0] - 1][coord_m[1] - 1];
+        // coronar peon blanco
+        if(coord_m[0] == 1) verDialogCanviarPieza(pieza);
+        // coronar peon negro
+        else if(coord_m[0] == 8) verDialogCanviarPieza(pieza);
+    }
+}
+
+function verDialogCanviarPieza(pieza) {
     var modal = document.getElementById('change-piece');
     var modal_body = document.querySelector('#change-piece .modal-body');
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
     var div;
-    // When the user clicks the button, open the modal
-    btn.onclick = function () {
-        div = document.createElement("div");
-        div.style.backgroundImage = `url('${PIEZAS_NEGRAS[0].img}')`;
-        modal_body.appendChild(div);
-        modal.style.display = "block";
+    // abre modal
+    // pinta piezas disponibles
+    if(pieza.equipo == TEAM_NEGRAS){
+        for (let n = 0; n < 4; n++) {
+            div = document.createElement("div");
+            div.className = "eleccion";
+            div.style.backgroundImage = `url('${PIEZAS_NEGRAS[n].img}')`;
+            modal_body.appendChild(div);
+        }
+    } else if (pieza.equipo == TEAM_BLANCAS) {
+        for (let n = 8; n < 12; n++) {
+            div = document.createElement("div");
+            div.className = "eleccion";
+            div.style.backgroundImage = `url('${PIEZAS_BLANCAS[n].img}')`;
+            modal_body.appendChild(div);
+        }
     }
-    // When the user clicks anywhere outside of the modal, close it
-    modal_body.onclick = function (event) {
-        if (event.target == div) {
+    modal.style.display = "block";
+    modal_body.addEventListener('click', e => {
+        var elegida = e.target;
+        if (elegida.className == "eleccion") {
+            var img = elegida.style.backgroundImage;
+            img = img.substring(5, 15);
+            var team;
+            var coord = pieza.id.split("-").map(Number);
+            var res;
+            // cojer equipo
+            if(img.charAt(4) == 'N') {team = TEAM_NEGRAS;}
+            else if(img.charAt(4) == 'B') {team = TEAM_BLANCAS;}
+            // cojer pieza elegida
+            switch (img.charAt(5)) {
+                case "T":
+                    res = new Torre(coord[0]+"-"+coord[1], img, team);
+                    break;
+                case "C":
+                    res = new Caballo(coord[0]+"-"+coord[1], img, team);
+                    break;
+                case "A":
+                    res = new Alfil(coord[0]+"-"+coord[1], img, team);
+                    break;
+                case "D":
+                    res = new Dama(coord[0]+"-"+coord[1], img, team);
+                    break;
+            }
+            TABLERO[coord[0]-1][coord[1]-1] = res;
+            pintaUI();
+            console.log(TABLERO);
+
+            // cerrar modal
             while (modal_body.hasChildNodes()) {
                 modal_body.removeChild(modal_body.firstChild);
             }
             modal.style.display = "none";
         }
-    };
+    });
 }

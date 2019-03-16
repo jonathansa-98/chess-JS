@@ -95,10 +95,10 @@ body {
 /* Modal Content */
 .modal-content {
     position: fixed;
-    bottom: 0;
+    bottom: 100px;
     background-color: #fefefe;
-    width: 320px;
-    height: 50vh;
+    width: 240px;
+    height: 260px;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.2s;
     animation-name: slideIn;
@@ -106,15 +106,21 @@ body {
 }
 
 .modal-header {
-    padding: 2px 16px;
-    height: 75%;
+    padding: 1px 20px;
+    height: 200px;
     background-color: #5cb85c;
     color: white;
 }
 
 .modal-body {
-    padding: 2px 16px;
-    height: 25%;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+}
+
+.modal-body div:hover{
+    cursor: pointer;
+    background-color: crimson;
 }
 
 #change-piece .modal-body div {
