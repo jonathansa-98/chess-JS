@@ -6,7 +6,7 @@ const PIEZAS_NEGRAS = [];
 const TEAM_BLANCAS = -1;
 const TEAM_NEGRAS = 1;
 const TABLERO_DOM = document.querySelector("#tablero");
-var pieza;
+let pieza;
 let celdas;
 
 /****************** */
@@ -15,6 +15,7 @@ window.onload = start;
 
 function start() {
     pintaTablero();
+    verDialogCanviarPieza()
 }
 
 function creaNegras() {
@@ -95,12 +96,8 @@ function pintaPiezas() {
     pintaUI();
 }
 
-function random(casillas, start) {
-    return Math.floor(Math.random() * casillas + start)
-}
-
 function mueveCelda(x1, y1, x2, y2) {
-    x1 -= 1; y1 -= 1; x2 -= 1; y2 -= 1;
+    x1--; y1--; x2--; y2--;
     var aux1 = copia(TABLERO[x1][y1]);
     var aux2 = copia(TABLERO[x2][y2]);
     var id1 = aux1.id;
@@ -147,7 +144,11 @@ function pintaUI() {
 TABLERO_DOM.addEventListener('click', e => {
     celdas = document.querySelectorAll("#tablero > div");
     var celda = e.target;
-    if (celda.classList.contains('pieza')) {
+    // ataque a pieza
+    if (celda.classList.contains('pieza') && celda.classList.contains('marcador')) {
+
+    // selecciona pieza
+    } else if (celda.classList.contains('pieza')) {
         celdas.forEach(ele => {
             ele.classList.remove("marcador");
         });
@@ -158,6 +159,7 @@ TABLERO_DOM.addEventListener('click', e => {
         for (let i = 0; i < mov.length; i++) {
             celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
         }
+    // gestiona movimiento de la pieza seleccionada
     } else if (celda.classList.contains('marcador')) {
         var coord_m = celda.id.split("-");
         var coord_p = pieza.id.split("-");
@@ -184,4 +186,29 @@ function getPiezaEnTABLERO(celda) {
             }
         }
     }
+}
+
+function verDialogCanviarPieza() {
+    // Get the modal
+    var modal = document.getElementById('change-piece');
+    var modal_body = document.querySelector('#change-piece .modal-body');
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    var div;
+    // When the user clicks the button, open the modal
+    btn.onclick = function () {
+        div = document.createElement("div");
+        div.style.backgroundImage = `url('${PIEZAS_NEGRAS[0].img}')`;
+        modal_body.appendChild(div);
+        modal.style.display = "block";
+    }
+    // When the user clicks anywhere outside of the modal, close it
+    modal_body.onclick = function (event) {
+        if (event.target == div) {
+            while (modal_body.hasChildNodes()) {
+                modal_body.removeChild(modal_body.firstChild);
+            }
+            modal.style.display = "none";
+        }
+    };
 }
