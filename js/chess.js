@@ -5,7 +5,7 @@ const PIEZAS_BLANCAS = [];
 const PIEZAS_NEGRAS = [];
 const TEAM_BLANCAS = -1;
 const TEAM_NEGRAS = 1;
-const TABLERO_DOM = document.querySelector("#tablero");
+let TABLERO_DOM;
 let MODAL;
 let MODAL_BODY;
 let pieza;
@@ -15,6 +15,7 @@ let turno = 0; // 0 no ha empezado, -1 turno blancas, 1 turno negras.
 function asignarVariables() {
     MODAL = document.querySelector('#change-piece');
     MODAL_BODY = document.querySelector('#change-piece .modal-body');
+    TABLERO_DOM = document.querySelector("#tablero");
 }
 
 /****************** */
