@@ -10,7 +10,9 @@ let MODAL;
 let MODAL_BODY;
 let pieza;
 let celdas;
-let turno = 0; // 0 no ha empezado, -1 turno blancas, 1 turno negras.
+let turno = -1; // -1 turno blancas, 1 turno negras.
+let intervalN;
+let intervalB;
 
 function asignarVariables() {
     MODAL = document.querySelector('#change-piece');
@@ -27,6 +29,7 @@ function start() {
     pintaTablero();
     asignarClickTablero();
     asignarDialogCoronacion();
+    cuentaAtras();
 }
 
 function creaNegras() {
@@ -173,6 +176,7 @@ function asignarClickTablero() {
                 ele.classList.remove("marcador");
             });
             comprovarCoronacionPeon(coord_m);
+            cambiarTurno();
         // selecciona pieza
         } else if (celda.classList.contains('pieza')) {
             celdas.forEach(ele => {
@@ -282,4 +286,46 @@ function asignarDialogCoronacion() {
             MODAL.style.display = "none";
         }
     });
+}
+
+function cambiarTurno() {
+    if(turno == TEAM_BLANCAS){
+        turno = TEAM_NEGRAS;
+        clearInterval(intervalB);
+        cuentaAtras();
+    } else {
+        turno = TEAM_BLANCAS;
+        clearInterval(intervalN);
+        cuentaAtras();
+    }
+}
+
+// gestiona que tiempo se resta
+function cuentaAtras() {
+    var tiempo;
+    if(turno == TEAM_BLANCAS){
+        tiempo = document.querySelector("#tiempo_blancas");
+        intervalB = setInterval(() => {
+            restarSeg(tiempo);
+        }, 1000);
+    } else if(turno == TEAM_NEGRAS){
+        tiempo = document.querySelector("#tiempo_negras");
+        intervalN = setInterval(() => {
+            restarSeg(tiempo);
+        }, 1000);
+    }
+}
+
+function restarSeg(tiempo) {
+    var aux = tiempo.innerHTML.split(":").map(Number);
+    var m = aux[0];
+    var s = aux[1];
+    s--;
+    if(s == -1){
+        s = 59;
+        m--;
+    }
+    if(m < 10) m = "0" + m;
+    if(s < 10) s = "0" + s;
+    tiempo.innerHTML = m+":"+s;
 }
