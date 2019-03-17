@@ -6,15 +6,26 @@ const PIEZAS_NEGRAS = [];
 const TEAM_BLANCAS = -1;
 const TEAM_NEGRAS = 1;
 const TABLERO_DOM = document.querySelector("#tablero");
+let MODAL;
+let MODAL_BODY;
 let pieza;
 let celdas;
+let turno = 0; // 0 no ha empezado, -1 turno blancas, 1 turno negras.
+
+function asignarVariables() {
+    MODAL = document.querySelector('#change-piece');
+    MODAL_BODY = document.querySelector('#change-piece .modal-body');
+}
 
 /****************** */
 /** preparacion inicial */
 window.onload = start;
 
 function start() {
+    asignarVariables();
     pintaTablero();
+    asignarClickTablero();
+    asignarDialogCoronacion();
 }
 
 function creaNegras() {
@@ -43,17 +54,6 @@ function creaBlancas() {
     PIEZAS_BLANCAS.push(new Alfil("8-6", "img/BA.png", TEAM_BLANCAS));
     PIEZAS_BLANCAS.push(new Caballo("8-7", "img/BC.png", TEAM_BLANCAS));
     PIEZAS_BLANCAS.push(new Torre("8-8", "img/BT.png", TEAM_BLANCAS));
-}
-
-function pintaTablero() {
-    creaNegras();
-    creaBlancas();
-    for (let x = 1; x <= NUM_CELDAS; x++) {
-        for (let y = 1; y <= NUM_CELDAS; y++) {
-            pintaCelda(x, y);
-        }
-    }
-    pintaPiezas();
 }
 
 function pintaCelda(x, y) {
@@ -95,6 +95,18 @@ function pintaPiezas() {
     pintaUI();
 }
 
+function pintaTablero() {
+    creaNegras();
+    creaBlancas();
+    for (let x = 1; x <= NUM_CELDAS; x++) {
+        for (let y = 1; y <= NUM_CELDAS; y++) {
+            pintaCelda(x, y);
+        }
+    }
+    pintaPiezas();
+}
+
+// intercanvia las piezas en las 2 coordenadas sobre el tablero
 function mueveCelda(x1, y1, x2, y2) {
     x1--; y1--; x2--; y2--;
     var aux1 = copia(TABLERO[x1][y1]);
@@ -139,50 +151,46 @@ function pintaUI() {
     }
 }
 /**************************************************** */
-// addEventListener a piezas en tablero
-TABLERO_DOM.addEventListener('click', e => {
-    celdas = document.querySelectorAll("#tablero > div");
-    var celda = e.target;
-    var coord_m;
-    var coord_p;
-    // ataque a pieza
-    if (celda.classList.contains('pieza') && celda.classList.contains('marcador')) {
-        coord_m = celda.id.split("-").map(Number);
-        coord_p = pieza.id.split("-").map(Number);
-        matar(coord_m);
-        mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
-        pintaUI();
-        celdas.forEach(ele => {
-            ele.classList.remove("marcador");
-        });
-        comprovarCoronacionPeon(coord_m);
-    // selecciona pieza
-    } else if (celda.classList.contains('pieza')) {
-        celdas.forEach(ele => {
-            ele.classList.remove("marcador");
-        });
-        pieza = getPiezaEnTABLERO(celda);
-        var mov = pieza.getMovPosibles();
-        for (let i = 0; i < mov.length; i++) {
-            celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
+// Asigna listener click a piezas en tablero
+function asignarClickTablero() {
+    TABLERO_DOM.addEventListener('click', e => {
+        celdas = document.querySelectorAll("#tablero > div");
+        var celda = e.target;
+        var coord_m; // coordenada de marcador
+        var coord_p; // coordenada de pieza
+        // gestiona movimiento de la pieza seleccionada
+        if (celda.classList.contains('marcador')) {
+            coord_m = celda.id.split("-").map(Number);
+            coord_p = pieza.id.split("-").map(Number);
+            // ataque a pieza
+            if (celda.classList.contains('pieza')) {
+                matar(coord_m);
+            }
+            mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
+            pintaUI();
+            celdas.forEach(ele => {
+                ele.classList.remove("marcador");
+            });
+            comprovarCoronacionPeon(coord_m);
+        // selecciona pieza
+        } else if (celda.classList.contains('pieza')) {
+            celdas.forEach(ele => {
+                ele.classList.remove("marcador");
+            });
+            pieza = getPiezaEnTABLERO(celda);
+            var mov = pieza.getMovPosibles();
+            for (let i = 0; i < mov.length; i++) {
+                celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
+            }
+        } else {
+            celdas.forEach(ele => {
+                ele.classList.remove("marcador");
+            });
         }
-    // gestiona movimiento de la pieza seleccionada
-    } else if (celda.classList.contains('marcador')) {
-        coord_m = celda.id.split("-").map(Number);
-        coord_p = pieza.id.split("-").map(Number);
-        mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
-        pintaUI();
-        celdas.forEach(ele => {
-            ele.classList.remove("marcador");
-        });
-        comprovarCoronacionPeon(coord_m);
-    } else {
-        celdas.forEach(ele => {
-            ele.classList.remove("marcador");
-        });
-    }
-});
+    });
+}
 
+// devuelve la pieza del array segun el div que le pasamos por parametro
 function getPiezaEnTABLERO(celda) {
     for (let x = 0; x < TABLERO.length; x++) {
         for (let y = 0; y < TABLERO[x].length; y++) {
@@ -193,6 +201,7 @@ function getPiezaEnTABLERO(celda) {
     }
 }
 
+// elimina la pieza en la coord pasada por parametro i pone una "Pieza" en su lugar
 function matar(coord_destino) {
     x = coord_destino[0];
     y = coord_destino[1];
@@ -203,67 +212,73 @@ function matar(coord_destino) {
 
 function comprovarCoronacionPeon(coord_m) {
     if(pieza.constructor.name == "Peon"){
+        // cojer nueva posicion del peon
         var aux = TABLERO[coord_m[0] - 1][coord_m[1] - 1];
         pieza = new Peon(aux.id, aux.img, aux.equipo);
-        // coronar peon blanco
-        if(coord_m[0] == 1) verDialogCanviarPieza();
-        // coronar peon negro
-        else if(coord_m[0] == 8) verDialogCanviarPieza();
+        // coronar peon blanco o negro
+        if (coord_m[0] == 1 || coord_m[0] == 8) verDialogCanviarPieza();
     }
 }
 
-function verDialogCanviarPieza() {
-    var modal = document.getElementById('change-piece');
-    var modal_body = document.querySelector('#change-piece .modal-body');
+// pinta piezas disponibles en la coronacion del peon en el modal
+function pintaPiezasDialog() {
     var div;
-    // abre modal
-    // pinta piezas disponibles
-    if(pieza.equipo == TEAM_NEGRAS){
+    if (pieza.equipo == TEAM_NEGRAS) {
         for (let n = 0; n < 4; n++) {
             div = document.createElement("div");
             div.className = "eleccion";
             div.style.backgroundImage = `url('${PIEZAS_NEGRAS[n].img}')`;
-            modal_body.appendChild(div);
+            MODAL_BODY.appendChild(div);
         }
     } else if (pieza.equipo == TEAM_BLANCAS) {
         for (let n = 8; n < 12; n++) {
             div = document.createElement("div");
             div.className = "eleccion";
             div.style.backgroundImage = `url('${PIEZAS_BLANCAS[n].img}')`;
-            modal_body.appendChild(div);
+            MODAL_BODY.appendChild(div);
         }
     }
-    modal.style.display = "block";
-    modal_body.addEventListener('click', e => {
+}
+
+function verDialogCanviarPieza() {
+    pintaPiezasDialog(MODAL_BODY);
+    MODAL.style.display = "block";
+}
+
+function asignarDialogCoronacion() {
+    MODAL_BODY.addEventListener('click', e => {
         var elegida = e.target;
         if (elegida.className == "eleccion") {
             var img = elegida.style.backgroundImage.substring(5, 15);
             var team;
             var coord = pieza.id.split("-").map(Number);
             // cojer equipo
-            if(img.charAt(4) == 'N') {team = TEAM_NEGRAS;}
-            else if(img.charAt(4) == 'B') {team = TEAM_BLANCAS;}
+            if (img.charAt(4) == 'N') {
+                team = TEAM_NEGRAS;
+            } else if (img.charAt(4) == 'B') {
+                team = TEAM_BLANCAS;
+            }
             // cojer pieza elegida
             switch (img.charAt(5)) {
                 case "T":
-                    TABLERO[coord[0]-1][coord[1]-1] = new Torre(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0] - 1][coord[1] - 1] = new Torre(coord[0] + "-" + coord[1], img, team);
                     break;
                 case "C":
-                    TABLERO[coord[0]-1][coord[1]-1] = new Caballo(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0] - 1][coord[1] - 1] = new Caballo(coord[0] + "-" + coord[1], img, team);
                     break;
                 case "A":
-                    TABLERO[coord[0]-1][coord[1]-1] = new Alfil(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0] - 1][coord[1] - 1] = new Alfil(coord[0] + "-" + coord[1], img, team);
                     break;
                 case "D":
-                    TABLERO[coord[0]-1][coord[1]-1] = new Dama(coord[0]+"-"+coord[1], img, team);
+                    TABLERO[coord[0] - 1][coord[1] - 1] = new Dama(coord[0] + "-" + coord[1], img, team);
                     break;
             }
             pintaUI();
             // cerrar modal
-            while (modal_body.hasChildNodes()) {
-                modal_body.removeChild(modal_body.firstChild);
+            while (MODAL_BODY.hasChildNodes()) {
+                MODAL_BODY.removeChild(MODAL_BODY.firstChild);
             }
-            modal.style.display = "none";
+            MODAL.style.display = "none";
         }
     });
 }
