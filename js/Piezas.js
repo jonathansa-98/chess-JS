@@ -11,8 +11,6 @@ Pieza.prototype.calcCollision = function (pos) {
     var pieza = this;
     var x = pos[0] - 1;
     var y = pos[1] - 1;
-    //console.log(`x: ${x}, y: ${y}`);
-    //console.log(TABLERO[x][y]);
     if (TABLERO[x][y].equipo == pieza.equipo) {
         return 1;
     } else if (TABLERO[x][y].equipo != 0 &&
@@ -25,7 +23,7 @@ Pieza.prototype.calcCollision = function (pos) {
 
 Pieza.prototype.toString = function () {
     return `ID: ${this.id} Img: ${this.img} Equipo: ${this.equipo}`;
-}
+};
 
 /** Peon */
 Peon.prototype = new Pieza();
@@ -77,8 +75,7 @@ Peon.prototype.calcAtaquesPosibles = function(pos, posibles) {
 Peon.prototype.getMovPosibles = function() {
     var pos = [];
     var posibles = [];
-    pos = this.id.split("-");
-    pos = pos.map(Number);
+    pos = this.id.split("-").map(Number);
     this.calcAtaquesPosibles(pos, posibles);
     try{
         if (this.equipo == TEAM_NEGRAS) {
@@ -105,10 +102,8 @@ Peon.prototype.getMovPosibles = function() {
             }
         }
     } catch(e){}
-    //console.log(posibles);
     return posibles;
 };
-/******************* */
 /** Torre */
 Torre.prototype = new Pieza();
 Torre.prototype.constructor = Torre;
@@ -153,11 +148,9 @@ Torre.prototype.getMovPosibles = function () {
         posibles.push(pos.slice(0));
         if (this.calcCollision(pos) == -1) break;
     }
-    //console.log(posibles);
     return posibles;
 };
 
-/******************* */
 /** Caballo */
 Caballo.prototype = new Pieza();
 Caballo.prototype.constructor = Caballo;
@@ -217,10 +210,8 @@ Caballo.prototype.getMovPosibles = function () {
         pos[1] += 2;
         if (this.calcCollision(pos) != 1) posibles.push(pos.slice(0));
     }
-    //console.log(posibles);
     return posibles;
 };
-/******************* */
 /** Alfil */
 Alfil.prototype = new Pieza();
 Alfil.prototype.constructor = Alfil;
@@ -268,10 +259,8 @@ Alfil.prototype.getMovPosibles = function () {
         posibles.push(pos.slice(0));
         if (this.calcCollision(pos) == -1) break;
     }
-    //console.log(posibles);
     return posibles;
 };
-/******************* */
 /** Dama */
 Dama.prototype = new Pieza();
 Dama.prototype.constructor = Dama;
@@ -350,10 +339,8 @@ Dama.prototype.getMovPosibles = function () {
         posibles.push(pos.slice(0));
         if (this.calcCollision(pos) == -1) break;
     }
-    //console.log(posibles);
     return posibles;
 };
-/******************* */
 /** Rey */
 Rey.prototype = new Pieza();
 Rey.prototype.constructor = Rey;
@@ -409,7 +396,5 @@ Rey.prototype.getMovPosibles = function () {
         pos[1]--;
         if (this.calcCollision(pos) != 1) posibles.push(pos.slice(0));
     }
-    //console.log(posibles);
     return posibles;
 };
-/******************* */

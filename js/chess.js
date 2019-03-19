@@ -30,6 +30,7 @@ function start() {
     asignarClickTablero();
     asignarDialogCoronacion();
     cuentaAtras();
+    asignarEmpate();
 }
 
 function creaNegras() {
@@ -170,22 +171,28 @@ function asignarClickTablero() {
             if (celda.classList.contains('pieza')) {
                 matar(coord_m);
             }
-            mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
-            pintaUI();
+            if (turno != 0){
+                mueveCelda(coord_p[0], coord_p[1], coord_m[0], coord_m[1]);
+                pintaUI();
+            }
             celdas.forEach(ele => {
                 ele.classList.remove("marcador");
             });
-            comprovarCoronacionPeon(coord_m);
-            cambiarTurno();
+            if (turno != 0) {
+                comprovarCoronacionPeon(coord_m);
+                cambiarTurno();
+            }
         // selecciona pieza
         } else if (celda.classList.contains('pieza')) {
             celdas.forEach(ele => {
                 ele.classList.remove("marcador");
             });
             pieza = getPiezaEnTABLERO(celda);
-            var mov = pieza.getMovPosibles();
-            for (let i = 0; i < mov.length; i++) {
-                celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
+            if(pieza.equipo == turno){
+                var mov = pieza.getMovPosibles();
+                for (let i = 0; i < mov.length; i++) {
+                    celdas[8 * mov[i][0] + mov[i][1] - 9].classList.add("marcador");
+                }
             }
         } else {
             celdas.forEach(ele => {
@@ -210,6 +217,17 @@ function getPiezaEnTABLERO(celda) {
 function matar(coord_destino) {
     x = coord_destino[0];
     y = coord_destino[1];
+    if(TABLERO[x-1][y-1] instanceof Rey){
+        clearInterval(intervalB);
+        clearInterval(intervalN);
+        TABLERO_DOM.style.pointerEvents = "none";
+        if(turno == TEAM_BLANCAS) {
+            alert("jaque mate, ganan blancas");
+        } else if(turno == TEAM_NEGRAS) {
+            alert("jaque mate, ganan negras");
+        }
+        turno = 0; // acaba
+    }
     var vacia = new Pieza(`${x}-${y}`);
     x--; y--;
     TABLERO[x][y] = vacia;
@@ -328,4 +346,29 @@ function restarSeg(tiempo) {
     if(m < 10) m = "0" + m;
     if(s < 10) s = "0" + s;
     tiempo.innerHTML = m+":"+s;
+    if(m == 0 && s == 0){
+        clearInterval(intervalB);
+        clearInterval(intervalN);
+        TABLERO_DOM.style.pointerEvents = "none";
+        if (turno == TEAM_BLANCAS) {
+            alert("blancas agotaron el tiempo");
+        } else if (turno == TEAM_NEGRAS) {
+            alert("negras agotaron el tiempo");
+        }
+        turno = 0; // acaba
+    }
+}
+
+function asignarEmpate() {
+    document.querySelector("#empate").addEventListener('click', e => {
+        clearInterval(intervalB);
+        clearInterval(intervalN);
+        TABLERO_DOM.style.pointerEvents = "none";
+        if (turno == TEAM_BLANCAS) {
+            alert("blancas empata");
+        } else if (turno == TEAM_NEGRAS) {
+            alert("negras empata");
+        }
+        turno = 0; // acaba
+    });
 }
